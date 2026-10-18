@@ -79,6 +79,7 @@ packages=(
   mission-center
   ### misc ###
   stow
+  cronie # cron daemon, runs the backup job (dotfiles/crontab)
   less
   eza
   brightnessctl

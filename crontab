@@ -1,0 +1,10 @@
+# Full-system backup to the 4TB drive - dotfiles/scripts/backup.sh
+# Fires daily at 20:00; the script itself decides whether a run is due:
+# every three months after the last successful run (catches up if the
+# machine was off past the due date). Keeps two copies (bak + bak.bak)
+# within a 1 TB cap.
+#
+# Linux SSD only (SKIP_WINDOWS=1): the Windows SSD backup lives separately
+# in <4TB>/backup/windows/ and is refreshed only by a manual full run:
+#   /home/joachim/dotfiles/scripts/backup.sh --force
+0 20 * * * SKIP_WINDOWS=1 /home/joachim/dotfiles/scripts/backup.sh >> /home/joachim/.local/state/backup-cron.log 2>&1
