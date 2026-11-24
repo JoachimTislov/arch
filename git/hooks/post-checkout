@@ -1,0 +1,59 @@
+#!/bin/sh
+# Fires when you come back to the base branch (develop/main/master) from a
+# ticket branch — i.e. when a piece of work is done being touched. Prints a
+# short summary and records a TODO-sync marker so the next Claude session can
+# reconcile that branch's TODOs against the task list.
+#
+# Lives here rather than in one repo's .git/hooks so a global `core.hooksPath`
+# doesn't silently disable it — see ../install-hooks.sh. It runs in every repo on
+# the machine, so every repo-specific assumption is guarded: a missing base
+# branch or an empty repo degrades to printing less, never to an error.
+
+# Only fire on branch checkouts, not file checkouts
+[ "$3" = "1" ] || exit 0
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+[ -z "$BRANCH" ] && exit 0
+[ "$BRANCH" = "HEAD" ] && exit 0
+
+# The base branch this repo actually has, in preference order.
+BASE=""
+for candidate in develop main master; do
+    if git show-ref --verify --quiet "refs/heads/$candidate"; then
+        BASE=$candidate
+        break
+    fi
+done
+
+# Only interested in *arriving at* the base branch.
+[ -n "$BASE" ] || exit 0
+[ "$BRANCH" = "$BASE" ] || exit 0
+
+PREV=$(git reflog -1 --format="%gs" 2>/dev/null | grep -oE 'moving from [^ ]+' | cut -d' ' -f3)
+
+# Nothing was left behind (fresh clone, or base → base).
+[ -n "$PREV" ] || exit 0
+[ "$PREV" = "$BASE" ] && exit 0
+
+echo ""
+echo "⎇  $BASE  — left $PREV"
+
+# How far ahead the branch you just left is, so you can see if it's unmerged.
+AHEAD=$(git rev-list --count "$BASE..$PREV" 2>/dev/null)
+if [ -n "$AHEAD" ] && [ "$AHEAD" -gt 0 ]; then
+    echo "ℹ  $PREV is $AHEAD commit(s) ahead of $BASE — not merged yet"
+fi
+
+# Record the TODO sync. todo-sync.sh owns the marker format; this hook only
+# reports the event. Resolved relative to this hook so it works wherever the
+# hooks directory is installed.
+HOOK_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+if [ -x "$HOOK_DIR/todo-sync.sh" ]; then
+    REPO=$(git rev-parse --show-toplevel 2>/dev/null)
+    if "$HOOK_DIR/todo-sync.sh" record "$REPO" "$PREV" "$BASE"; then
+        echo "✎  TODO sync queued for $PREV — next Claude session will pick it up"
+    fi
+fi
+
+echo ""
+exit 0

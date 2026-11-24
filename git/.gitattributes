@@ -1,0 +1,4 @@
+# Hooks are executed by /bin/sh — CRLF would break the shebang ("bad
+# interpreter: no such file or directory"). Force LF regardless of
+# core.autocrlf on the machine that checks this out.
+* text eol=lf

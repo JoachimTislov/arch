@@ -1,0 +1,33 @@
+#!/bin/sh
+# Block direct commits to protected branches. Work belongs on a ticket branch
+# and lands via PR.
+#
+# Distributed via `core.hooksPath` — see ../install-hooks.sh. Because a global
+# hooksPath applies to every repo on the machine, this hook must stay generic:
+# no repo-specific assumptions, and a cheap exit when nothing applies.
+#
+# Escape hatch: ALLOW_PROTECTED_COMMIT=1 git commit ...
+# (prefer that over --no-verify, which disables every other hook too)
+
+PROTECTED="main master develop"
+
+[ -n "$ALLOW_PROTECTED_COMMIT" ] && exit 0
+
+branch=$(git branch --show-current)
+
+# Detached HEAD, or a rebase/bisect mid-flight — nothing to protect.
+[ -z "$branch" ] && exit 0
+
+for protected in $PROTECTED; do
+    if [ "$branch" = "$protected" ]; then
+        echo "error: direct commits to '$branch' are not allowed." >&2
+        echo "" >&2
+        echo "Move this work onto a ticket branch:" >&2
+        echo "  git checkout -b <TICKET>-<short-desc>" >&2
+        echo "" >&2
+        echo "Intentional? Re-run with: ALLOW_PROTECTED_COMMIT=1 git commit ..." >&2
+        exit 1
+    fi
+done
+
+exit 0

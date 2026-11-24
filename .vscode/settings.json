@@ -7,7 +7,7 @@
   "svelte.enable-ts-plugin": true,
   "window.menuBarVisibility": "compact",
   "[svelte]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "git.autofetch": true,
   "security.workspace.trust.untrustedFiles": "open",
@@ -42,7 +42,7 @@
   "vim.handleKeys": {
     "<C-d>": true,
     "<C-s>": false,
-    "<C-z>": false
+    "<C-z>": false,
   },
   "git.openRepositoryInParentFolders": "never",
   "terminal.integrated.stickyScroll.enabled": false,
@@ -54,5 +54,9 @@
   "editor.codeLens": false,
   "files.autoSaveWhenNoErrors": true,
   "i18n-ally.extract.autoDetect": true,
-  "i18n-ally.keystyle": "auto"
+  "i18n-ally.keystyle": "auto",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "claudeCode.preferredLocation": "panel",
+  "chat.viewSessions.orientation": "stacked",
+  "githubPullRequests.pullBranch": "never",
 }

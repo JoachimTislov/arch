@@ -1,0 +1,18 @@
+# https://github.com/JoachimTislov/dotfiles/blob/archlinux/.ripgreprc
+# It does not register the ignore file?
+# --ignore-file=~/.ignore
+
+# Don't let ripgrep vomit really long lines to my terminal, and show a preview.
+--max-columns=150
+--max-columns-preview
+
+# Search hidden files / directories (e.g. dotfiles) by default
+--hidden
+
+# Using glob patterns to include/exclude files or folders
+--g=!go/*
+--g=!.git/*
+--g=!.cache/*
+--g=!**/Cache/**
+--g=!**/Code Cache/**
+--g=!**/*.{jpg,jpeg,png,gif,bmp,webp,tiff,tif,svg,heic,ico}

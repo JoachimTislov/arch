@@ -1,0 +1,103 @@
+set visualbell
+set noerrorbells
+set clipboard+=unnamed
+
+" Basic Vim settings
+let mapleader = ' '
+let maplocalleader = ' '
+
+" Editor settings
+set number
+set relativenumber
+set scrolloff=15
+
+" IdeaVim specific settings
+set ideajoin
+set idearefactormode=keep
+set ideastatusicon=gray
+
+" IdeaVim plugins
+Plug 'machakann/vim-highlightedyank'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'preservim/nerdtree'
+Plug 'easymotion/vim-easymotion'
+
+" Key mappings
+" Disable space in normal and visual modes
+nnoremap <Space> <Nop>
+vnoremap <Space> <Nop>
+xnoremap <Space> <Nop>
+
+" Clear highlights on search
+nnoremap <Esc> :nohlsearch<CR>
+
+" Navigate between windows
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-l> <C-W>l
+nnoremap <C-h> <C-W>h
+
+" Center editor view
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap <C-f> <C-f>zz
+nnoremap <C-b> <C-b>zz
+
+" Omit chars consumed by x and c operators
+nnoremap x "_x
+nnoremap c "_c
+vnoremap x "_x
+vnoremap c "_c
+
+" [O]pen - IDE-specific actions
+nnoremap <leader>om :action ShowErrorDescription<CR>
+nnoremap <leader>on :action ActivateVersionControlToolWindow<CR>
+nnoremap <leader>os :action SplitHorizontally<CR>
+nnoremap <leader>ov :action SplitVertically<CR>
+nnoremap <leader>oc :e ~/.ideavimrc<CR>
+
+" [P]ick - IDE file navigation
+nnoremap <leader>pf :action GotoFile<CR>
+nnoremap <leader>ph :action Help<CR>
+nnoremap <leader>pb :action RecentFiles<CR>
+
+" Actions
+nnoremap <S-h> :action SelectInProjectView<CR>
+nnoremap <leader>lf :action ReformatCode<CR>
+nnoremap <leader>e :action CloseEditor<CR>
+nnoremap <leader>w :action SaveDocument<CR>
+
+" IDE-specific Git actions
+nnoremap ]c :action VcsShowNextChangeMarker<CR>
+nnoremap [c :action VcsShowPrevChangeMarker<CR>
+nnoremap <leader>gs :action Vcs.Show.Local.Changes<CR>
+nnoremap <leader>gr :action Vcs.RollbackChangedLines<CR>
+nnoremap <leader>gp :action Vcs.ShowDiffChangedLines<CR>
+nnoremap <leader>gb :action Annotate<CR>
+nnoremap <leader>gd :action Compare.SameVersion<CR>
+
+" LSP-like functionality with IDE actions
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gr :action FindUsages<CR>
+nnoremap K :action QuickJavaDoc<CR>
+nnoremap <leader>rn :action RenameElement<CR>
+nnoremap <leader>ca :action ShowIntentionActions<CR>
+
+" Quickfix list navigation with IDE error navigation
+nnoremap <M-j> :action GotoNextError<CR>
+nnoremap <M-k> :action GotoPreviousError<CR>
+
+" NERDTree-like file browser
+nnoremap <leader>nt :NERDTreeToggle<CR>
+
+" Commentary
+nnoremap gcc :action CommentByLineComment<CR>
+vnoremap gc :action CommentByLineComment<CR>
+
+" EasyMotion
+nmap s <Plug>(easymotion-s2)
+nmap t <Plug>(easymotion-t2)
+
+" Highlight yanked text
+let g:highlightedyank_highlight_duration = 200
